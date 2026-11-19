@@ -1,0 +1,24 @@
+# wisland dependencies (keep this file ASCII-only: pip on Chinese Windows reads it as GBK)
+PySide6-Essentials>=6.8
+psutil
+httpx
+pycaw
+comtypes
+pyyaml
+winrt-runtime
+winrt-Windows.Media.Control
+winrt-Windows.Foundation
+winrt-Windows.Foundation.Collections
+winrt-Windows.Storage.Streams
+winrt-Windows.Devices.Radios
+winrt-Windows.Devices.Bluetooth
+# live Japanese subtitles (speech recognition)
+numpy>=1.26,<3
+SoundCard>=0.4,<1
+soxr>=0.3,<1
+sherpa-onnx>=1.12,<2
+huggingface-hub>=0.24,<2
+# word lookup / wordbook / Anki
+fugashi>=1.3,<2
+unidic-lite>=1.0.8,<2
+genanki>=0.13,<1
