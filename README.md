@@ -1,10 +1,12 @@
-# dsh-island · DeepSeek Harness 桌面灵动岛
+# dsh-island
 
-> **DSH 集成** — 把 [wisland](https://github.com/AsamiAkito/wisland) 的桌面灵动岛接上 **DeepSeek Harness（DSH）** 的实时状态。
+> **DSH 适配层** — 为 [wisland](https://github.com/AsamiAkito/wisland) 桌面灵动岛添加 DeepSeek Harness（DSH）状态接入。
+
+> **⚠️ 重要：灵动岛（wisland）不是本项目创作。** 它的液态外观、小形象、交互、天气/音乐等功能全部来自 [AsamiAkito/wisland](https://github.com/AsamiAkito/wisland)（MIT 协议）。本仓库**只做了一件事：DSH 适配**——让灵动岛的眼睛颜色和律动条颜色反映 DSH 状态。喜欢这个灵动岛请给原作者点 Star 🙏。
 
 ![dsh-island](docs/home.png)
 
-wisland 是一个 Windows 液态灵动岛（Python + PySide6），贴在屏幕边缘、悬停展开。本仓库在它的基础上接入了 DSH：**不用盯着 DSH 窗口，扫一眼灵动岛就知道它在干什么**。
+wisland 是一个 Windows 液态灵动岛（Python + PySide6），贴在屏幕边缘、悬停展开。本仓库在它基础上接入了 DSH：**不用盯着 DSH 窗口，扫一眼灵动岛就知道它在干什么**。
 
 ## DSH 状态 → 颜色（常驻）
 
