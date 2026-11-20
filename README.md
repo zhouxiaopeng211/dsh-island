@@ -45,6 +45,36 @@ DSH 本身只有窗口内的进度提示：窗口一最小化、或你切去打�
 
 > 注意：DSH 的「授权 / 提问」事件是**会话作用域**的，插件已按正确方式（在 agent 作用域上注册）监听，无需额外配置。
 
+## 实时字幕（日语 → 中文）
+
+在灵动岛上点「开始聆听」，播放日语视频 / 音频时会实时出**日语字幕 + 中文翻译**：
+
+- **日语识别**：本地 Parakeet 0.6B（sherpa-onnx），不联网、不上传音频
+- **中文翻译**：默认使用 **B 站 Index-Translate** 免费接口（无需 Key、无需注册）
+
+### 启用步骤
+
+1. 装依赖（`setup.bat` 已包含）：
+   ```bash
+   pip install numpy SoundCard soxr sherpa-onnx huggingface-hub
+   ```
+2. 下载日语模型（约 625 MB，国内建议走镜像）：
+   ```bash
+   set HF_ENDPOINT=https://hf-mirror.com
+   python scripts/download_models.py
+   ```
+3. 启动 wisland → 灵动岛「实时字幕 → 开始聆听」
+
+### 翻译服务（`config.json → translate`）
+
+| 服务 | 费用 | 是否需要 Key | 配置 |
+|---|---|---|---|
+| **B 站 Index-Translate**（默认） | 免费 | 不需要 | `base_url: https://index-translate.bilibili.com/v1`、`model: Index-Translate-35B-A3B`、`api_key: free` |
+| 智谱 GLM-4-Flash | 免费 | 需要注册 | `base_url: https://open.bigmodel.cn/api/paas/v4`、`model: glm-4-flash` |
+| DeepSeek | 便宜但收费 | 需要 | `base_url: https://api.deepseek.com`、`model: deepseek-flash` |
+
+> 翻译走 OpenAI 兼容接口，任何兼容的服务都能接。B 站接口需要浏览器请求头（已内置）。
+
 ## 说明
 
 - 基于 [wisland](https://github.com/AsamiAkito/wisland)（MIT）修改，保留原作者版权。

@@ -96,7 +96,10 @@ class TranslateService(QtCore.QObject):
             key = imp.get("api_key", "")
             base = imp.get("base_url") or base
             model = imp.get("model") or model
-        return key, (base or DEFAULT_BASE_URL).rstrip("/"), model or "deepseek-flash"
+        base = (base or DEFAULT_BASE_URL).rstrip("/")
+        if not model:
+            model = "Index-Translate-35B-A3B" if "bilibili" in base else "deepseek-flash"
+        return key, base, model
 
     def _import_settings(self) -> dict:
         """从 译声 的 config.json 读取 translate.*（仅内存，不写回我们的配置）。"""
@@ -151,7 +154,7 @@ class TranslateService(QtCore.QObject):
             return  # 还没开始就已被更新的请求取代
         try:
             key, base, model = self._settings()
-            if not key:
+            if not key and "deepseek" in base:
                 raise RuntimeError("未设置 DeepSeek API Key（config.json → translate.api_key）")
             payload = {
                 "model": model,
@@ -164,8 +167,15 @@ class TranslateService(QtCore.QObject):
             }
             deadline = time.monotonic() + TOTAL_DEADLINE_S
             parts: list[str] = []
+            req_headers = {"Authorization": f"Bearer {key or 'free'}"}
+            if "bilibili" in base:
+                req_headers.update({
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                    "Referer": "https://index-translate.bilibili.com/",
+                    "Origin": "https://index-translate.bilibili.com/",
+                })
             with self._http().stream("POST", base + "/chat/completions", json=payload,
-                                     headers={"Authorization": f"Bearer {key}"}) as r:
+                                     headers=req_headers) as r:
                 if r.status_code >= 400:
                     r.read()
                     r.raise_for_status()

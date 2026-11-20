@@ -130,16 +130,20 @@ class Translator:
 
     @property
     def model(self) -> str:
-        return str(self.config.get("translate.model", "deepseek-flash") or "deepseek-flash")
+        m = str(self.config.get("translate.model", "") or "")
+        if m:
+            return m
+        base = str(self.config.get("translate.base_url", "") or "")
+        return "Index-Translate-35B-A3B" if "bilibili" in base else "deepseek-flash"
 
     def translate(self, text: str, context: list[str], on_delta: OnDelta = None, **_ignored) -> str:
         text = (text or "").strip()
         if not text:
             return ""
         key = str(self.config.get("translate.api_key", "") or "").strip()
-        if not key:
-            raise RuntimeError("未设置 DeepSeek API Key")
         base = str(self.config.get("translate.base_url", "") or DEFAULT_BASE_URL).rstrip("/")
+        if not key and "deepseek" in base:
+            raise RuntimeError("未设置 DeepSeek API Key")
         payload = {
             "model": self.model,
             "messages": build_messages(text, context),
@@ -149,7 +153,13 @@ class Translator:
             "stream": True,
             "stream_options": {"include_usage": True},
         }
-        headers = {"Authorization": f"Bearer {key}"}
+        headers = {"Authorization": f"Bearer {key or 'free'}"}
+        if "bilibili" in base:
+            headers.update({
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "Referer": "https://index-translate.bilibili.com/",
+                "Origin": "https://index-translate.bilibili.com/",
+            })
         parts: list[str] = []
         try:
             client = _client(base)
